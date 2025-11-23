@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaChevronLeft } from 'react-icons/fa';
-import rooms from '@/data/rooms.json';
 import Heading from '@/components/Heading';
 import BookingForm from '@/components/BookingForm';
+import getSingleRoom from '@/app/actions/getSingleRoom';
 
 const RoomPage = async ({ params }) => {
     const { id } = (await params) ?? {};
@@ -12,11 +12,19 @@ const RoomPage = async ({ params }) => {
         return <Heading title="Room Not Found" />;
     }
 
-    const room = rooms.find(r => r.$id === id || r.id === id);
+    const room = await getSingleRoom(id);
 
     if (!room) {
         return <Heading title="Room Not Found" />;
     }
+
+    const bucketID = process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ROOMS;
+    const projectID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT;
+
+    const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketID}/files/${room.image}/view?project=${projectID}`;
+
+    const imageSrc = room.image ? imageUrl : '/images/no-image.jpg';
+
 
     return (
         <>
@@ -28,7 +36,7 @@ const RoomPage = async ({ params }) => {
                 </Link>
 
                 <div className="flex flex-col sm:flex-row sm:space-x-6">
-                    <Image width={ 400 } height={ 100 } src={ `/images/rooms/${room.image}` } alt={ room.name } className="w-full sm:w-1/3 h-64 object-cover rounded-lg" />
+                    <Image width={ 400 } height={ 100 } src={ imageSrc } alt={ room.name } className="w-full sm:w-1/3 h-64 object-cover rounded-lg" />
 
                     <div className="mt-4 sm:mt-0 sm:flex-1">
                         <p className="text-gray-600 mb-4">
