@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import checkAuth from "./app/actions/checkAuth";
 
-export async function middleware(request) {
+export async function proxy(request) {
     const { isAuthenticated } = await checkAuth();
 
     if (!isAuthenticated) {
