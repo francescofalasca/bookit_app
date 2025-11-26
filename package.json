@@ -17,6 +17,7 @@
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
+    "@next/codemod": "^16.1.0-canary.2",
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
   }
